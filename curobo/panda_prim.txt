@@ -1,0 +1,13 @@
+/World/Franka/panda_link0/panda_joint1
+/World/Franka/panda_link1/panda_joint2
+/World/Franka/panda_link1/panda_joint3
+/World/Franka/panda_link1/panda_joint4
+/World/Franka/panda_link1/panda_joint5
+/World/Franka/panda_link1/panda_joint6
+/World/Franka/panda_link1/panda_joint7
+/World/Franka/panda_link1/panda_joint8
+/World/Franka/panda_link8/panda_hand_joint
+/World/Franka/panda_hand/panda_finger_joint1
+/World/Franka/panda_hand/panda_finger_joint2
+/World/Franka/rootJoint
+
