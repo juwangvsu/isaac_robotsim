@@ -151,7 +151,7 @@ class HelloWorld(BaseSample):
                 self.target_prim = prim0
                 print('target prim ', prim0)
 
-            #print('prim ', prim0.GetPath())
+        #print('prim ', prim0.GetPath())
 
         # The world already called the setup_scene from the task (with first reset of the world)
         # so we can retrieve the task objects
