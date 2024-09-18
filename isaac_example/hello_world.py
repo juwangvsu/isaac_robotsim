@@ -13,6 +13,7 @@ import random
 import torch
 import omni.kit.pipapi
 from pxr import Sdf, UsdShade
+from pxr import Usd, Gf
 omni.kit.pipapi.install(
     package="/home/student/Documents/tang/cspace",
     #version="2.13.0",
@@ -136,6 +137,24 @@ class HelloWorld(BaseSample):
         shader.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).ConnectToSource(diffuse_tx.ConnectableAPI(), 'rgb')
         mtl.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(), "surface")
 
+        mtl_created_list = []
+# Create a new material using OmniPBR.mdl
+        omni.kit.commands.execute(
+            "CreateAndBindMdlMaterialFromLibrary",
+            mdl_name="OmniPBR.mdl",
+            mtl_name="OmniPBR",
+            mtl_created_list=mtl_created_list,
+        )
+        mtl_prim = stage.GetPrimAtPath(mtl_created_list[0])
+        omni.usd.create_material_input(
+            mtl_prim,
+            "diffuse_texture",
+            "/home/student/Documents/tang/isaac_robotsim/frame_0001.jpg",
+            #default_server + "/Isaac/Samples/DR/Materials/Textures/marble_tile.png",
+            Sdf.ValueTypeNames.Asset,
+        )
+        cube_mat_shade = UsdShade.Material(mtl_prim)
+
         primrange= stage.Traverse()
         print('prim range ', primrange)
         for prim0 in primrange:
@@ -150,8 +169,17 @@ class HelloWorld(BaseSample):
             if prim0.GetPath()=='/World/random_cube':
                 self.target_prim = prim0
                 print('target prim ', prim0)
+            if prim0.GetPath()=='/World/defaultGroundPlane/Enviroment/Geometry':
+                self.groundplane_prim = prim0
+                print('target prim ', prim0)
+                print(prim0.GetAttribute('xformOp:translate').Get())
+                print(prim0.GetAttribute('xformOp:scale').Get())
+                newscale = Gf.Vec3d(3.0,10.0,10.0)
+                prim0.GetAttribute("xformOp:scale").Set(Gf.Vec3d(newscale), 0)
+                UsdShade.MaterialBindingAPI(prim0).Bind(cube_mat_shade, UsdShade.Tokens.strongerThanDescendants)
 
-        #print('prim ', prim0.GetPath())
+
+            #print('prim ', prim0.GetPath())
 
         # The world already called the setup_scene from the task (with first reset of the world)
         # so we can retrieve the task objects
